@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contemplay — Banco de Cotas Ademicon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:     #ee3124;
+    --red-dk:  #7a1315;
+    --red-xdk: #380202;
+    --black:   #231f20;
+    --white:   #f7f4f0;
+    --gray:    #b8b4af;
+    --gray-lt: #e8e4df;
+    --mono:    'DM Mono', monospace;
+    --sans:    'Syne', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--sans);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--red-dk);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    background: var(--black);
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--red);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .logo-text span { color: var(--red); }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray);
+    text-align: right;
+    line-height: 1.6;
+  }
+  .header-meta strong { color: var(--white); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--red-dk);
+  }
+  .stat-cell {
+    padding: 1.25rem 2rem;
+    border-right: 1px solid var(--red-dk);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-value.accent { color: var(--red); }
+  .stat-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 13px;
+    pointer-events: none;
+    font-family: var(--mono);
+  }
+  input[type=text] {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px 8px 32px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type=text]:focus { border-color: var(--red); }
+  input[type=text]::placeholder { color: var(--gray); }
+
+  select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus { border-color: var(--red); }
+  select option { background: var(--black); }
+
+  .count-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .count-badge strong { color: var(--white); }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    border-bottom: 1px solid var(--red-dk);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  thead th:hover { color: var(--white); }
+  thead th.sorted { color: var(--red); }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.1s;
+  }
+  tbody tr:hover { background: rgba(238,49,36,0.06); }
+
+  tbody td {
+    padding: 10px 16px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .num { text-align: right; }
+
+  .grupo { font-weight: 500; color: var(--white); }
+  .credito { font-weight: 600; color: var(--white); font-size: 13px; }
+
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .tag-imovel  { background: rgba(238,49,36,0.15); color: var(--red); border: 1px solid rgba(238,49,36,0.3); }
+  .tag-veiculo { background: rgba(255,190,50,0.12); color: #f0b429; border: 1px solid rgba(255,190,50,0.25); }
+
+  .cet { font-weight: 600; font-size: 13px; }
+  .cet-low  { color: #3ecf8e; }
+  .cet-mid  { color: #f0b429; }
+  .cet-high { color: var(--red); }
+
+  .muted { color: var(--gray); }
+
+  /* ── EMPTY ── */
+  .empty {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--gray);
+    font-family: var(--mono);
+    font-size: 13px;
+    display: none;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--red-dk);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+  .footer-brand {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  .footer-brand span { color: var(--red); }
+  .footer-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red-dk);
+  }
+
+  /* ── FORMULA PILL ── */
+  .formula-pill {
+    margin: 0 2rem 0;
+    padding: 0.6rem 1rem;
+    background: rgba(238,49,36,0.08);
+    border: 1px solid rgba(238,49,36,0.2);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+  .formula-pill code {
+    color: var(--red);
+    background: rgba(238,49,36,0.12);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    header { padding: 0 1rem; }
+    .controls { padding: 0.75rem 1rem; }
+    .formula-pill { margin: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div class="logo-text">Contemp<span>lay</span></div>
+  </div>
+  <div class="header-meta">
+    <strong id="hdr-total">—</strong> cotas disponíveis<br>
+    Atualizado em <strong id="hdr-data">—</strong>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-cell">
+    <div class="stat-label">Cotas no filtro</div>
+    <div class="stat-value" id="s-total">—</div>
+    <div class="stat-sub">de <span id="s-banco">—</span> no banco</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Crédito total filtrado</div>
+    <div class="stat-value" id="s-credito">—</div>
+    <div class="stat-sub">soma das cotas</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Menor CET a.m.</div>
+    <div class="stat-value accent" id="s-mincet">—</div>
+    <div class="stat-sub">cota mais barata</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Maior crédito único</div>
+    <div class="stat-value" id="s-max">—</div>
+    <div class="stat-sub">R$ disponível</div>
+  </div>
+</div>
+
+<div class="formula-pill" style="margin-top:1rem">
+  <code>=TAXA(prazo; -parcela; crédito−entrada)</code>
+  &nbsp;·&nbsp; VP = Crédito − Entrada &nbsp;·&nbsp; PGTO = −Parcela &nbsp;·&nbsp; Solução Newton-Raphson (idêntico ao Excel)
+</div>
+
+<div class="controls" style="margin-top:1rem">
+  <div class="search-wrap">
+    <span class="search-icon">/</span>
+    <input type="text" id="busca" placeholder="Buscar grupo ou valor..." oninput="render()">
+  </div>
+  <select id="tipo" onchange="render()">
+    <option value="">Todos os tipos</option>
+    <option value="Imóveis">Imóveis</option>
+    <option value="Veículos">Veículos</option>
+  </select>
+  <select id="ordem" onchange="render()">
+    <option value="cet-asc">Menor CET a.m.</option>
+    <option value="credito-desc">Maior crédito</option>
+    <option value="credito-asc">Menor crédito</option>
+    <option value="prazo-asc">Menor prazo</option>
+    <option value="parcela-asc">Menor parcela</option>
+    <option value="saldo-asc">Menor saldo devedor</option>
+  </select>
+  <div class="count-badge"><strong id="lbl-count">—</strong> cotas</div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Grupo</th>
+        <th>Tipo</th>
+        <th class="num">Crédito disponível</th>
+        <th class="num">Vl. entrada</th>
+        <th class="num">VP líquido</th>
+        <th class="num">Parcela/mês</th>
+        <th class="num">Prazo</th>
+        <th class="num">Saldo devedor</th>
+        <th class="num sorted">CET a.m.</th>
+        <th class="num">CET a.a.</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="empty" id="empty">Nenhuma cota encontrada para este filtro.</div>
+</div>
+
+<footer>
+  <div class="footer-brand">Contemp<span>lay</span> · Alavanca Patrimonial</div>
+  <div class="footer-meta" id="footer-ts">—</div>
+</footer>
+
+<script>
+// ── TAXA (Newton-Raphson) — idêntico ao =TAXA() do Excel ──
+function TAXA(nper, pgto, vp, guess = 0.01) {
+  let r = guess;
+  for (let i = 0; i < 2000; i++) {
+    const rn  = Math.pow(1 + r, nper);
+    const f   = vp * rn + pgto * (rn - 1) / r;
+    const df  = vp * nper * Math.pow(1 + r, nper - 1)
+              + pgto * (nper * r * Math.pow(1 + r, nper - 1) - (rn - 1)) / (r * r);
+    if (Math.abs(df) < 1e-15) break;
+    const rNew = r - f / df;
+    if (Math.abs(rNew - r) < 1e-12) { r = rNew; break; }
+    r = rNew;
+  }
+  return r;
+}
+
+function fmt(v) {
+  return 'R$\u00A0' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtM(v) { return 'R$\u00A0' + (v/1e6).toFixed(2) + 'M'; }
+function cetClass(v) {
+  if (v < 1.0) return 'cet-low';
+  if (v < 1.5) return 'cet-mid';
+  return 'cet-high';
+}
+
+// ── DADOS — gerados automaticamente pelo script update_cotas.py ──
+// COTAS_DATA_START
+const COTAS_DATA = {"updated":"2026-03-18","source":"WhatsApp_Video_2026-03-18","total_banco":195,"cotas":[{"g":"690","t":"Imóveis","c":322519.95,"e":158034.78,"p":1685.01,"pr":174},{"g":"980","t":"Imóveis","c":86308.45,"e":42291.14,"p":525.96,"pr":193},{"g":"12145","t":"Imóveis","c":78600.97,"e":38514.48,"p":464.18,"pr":213},{"g":"1030","t":"Imóveis","c":81408.56,"e":38432.14,"p":529.92,"pr":197},{"g":"730","t":"Imóveis","c":100564.60,"e":49276.65,"p":682.76,"pr":180},{"g":"12143","t":"Imóveis","c":102470.93,"e":50210.76,"p":582.23,"pr":212},{"g":"900","t":"Imóveis","c":130373.80,"e":63883.16,"p":658.41,"pr":189},{"g":"910","t":"Imóveis","c":86981.66,"e":42621.01,"p":538.75,"pr":189},{"g":"740","t":"Imóveis","c":86820.33,"e":42541.96,"p":546.15,"pr":185},{"g":"1030b","t":"Imóveis","c":66430.80,"e":32551.09,"p":436.88,"pr":197},{"g":"880","t":"Imóveis","c":113982.25,"e":55851.30,"p":714.84,"pr":187},{"g":"750","t":"Imóveis","c":216881.59,"e":106271.98,"p":1228.10,"pr":187},{"g":"12000","t":"Imóveis","c":104520.85,"e":51215.22,"p":614.16,"pr":205},{"g":"80335","t":"Imóveis","c":80335.49,"e":39729.79,"p":483.70,"pr":196},{"g":"840","t":"Imóveis","c":86238.99,"e":42257.11,"p":598.51,"pr":181},{"g":"12132","t":"Imóveis","c":78600.97,"e":38514.48,"p":480.03,"pr":208},{"g":"12126","t":"Imóveis","c":78600.97,"e":38514.48,"p":481.91,"pr":207},{"g":"1020","t":"Imóveis","c":83616.68,"e":40972.17,"p":534.54,"pr":196},{"g":"12143b","t":"Imóveis","c":83616.68,"e":40972.17,"p":468.37,"pr":212},{"g":"12128","t":"Imóveis","c":78600.97,"e":38514.48,"p":482.52,"pr":207},{"g":"12141","t":"Imóveis","c":78600.97,"e":38514.48,"p":467.43,"pr":212},{"g":"12140","t":"Imóveis","c":80082.92,"e":37055.72,"p":476.08,"pr":211},{"g":"690b","t":"Imóveis","c":480333.38,"e":235363.36,"p":2958.26,"pr":174},{"g":"550","t":"Imóveis","c":219267.10,"e":107440.88,"p":1627.67,"pr":125},{"g":"1020b","t":"Imóveis","c":88503.85,"e":43366.89,"p":652.47,"pr":153},{"g":"12151","t":"Imóveis","c":102470.93,"e":50210.76,"p":583.00,"pr":212},{"g":"12149","t":"Imóveis","c":61646.52,"e":30206.79,"p":463.19,"pr":169},{"g":"840b","t":"Imóveis","c":105383.23,"e":51637.78,"p":721.08,"pr":181},{"g":"12148","t":"Imóveis","c":517523.07,"e":253586.30,"p":2840.89,"pr":214},{"g":"12149b","t":"Imóveis","c":61646.52,"e":30206.79,"p":378.32,"pr":210},{"g":"1080","t":"Imóveis","c":83016.32,"e":40678.00,"p":506.67,"pr":201},{"g":"680","t":"Imóveis","c":97113.56,"e":47585.64,"p":566.84,"pr":174},{"g":"12149c","t":"Imóveis","c":82803.69,"e":38576.49,"p":461.93,"pr":213},{"g":"1030c","t":"Imóveis","c":85664.31,"e":41975.51,"p":543.08,"pr":197},{"g":"1030d","t":"Imóveis","c":82221.84,"e":40288.70,"p":534.82,"pr":197},{"g":"1010","t":"Imóveis","c":65352.85,"e":31101.93,"p":417.70,"pr":195},{"g":"12152","t":"Imóveis","c":82803.69,"e":40573.81,"p":453.31,"pr":214},{"g":"921","t":"Imóveis","c":82805.85,"e":39423.61,"p":538.75,"pr":191},{"g":"284137","t":"Imóveis","c":284137.46,"e":139227.36,"p":1805.28,"pr":180},{"g":"860","t":"Imóveis","c":170151.83,"e":83374.40,"p":1190.11,"pr":166},{"g":"850","t":"Imóveis","c":67909.57,"e":33275.69,"p":467.11,"pr":184},{"g":"12132b","t":"Imóveis","c":77827.96,"e":36340.48,"p":480.03,"pr":208},{"g":"12143c","t":"Imóveis","c":62262.36,"e":30508.56,"p":372.67,"pr":212},{"g":"1020c","t":"Imóveis","c":82221.16,"e":40288.37,"p":521.19,"pr":196},{"g":"900b","t":"Imóveis","c":227107.91,"e":111282.88,"p":1158.88,"pr":190},{"g":"910b","t":"Imóveis","c":82584.54,"e":39053.22,"p":562.42,"pr":189},{"g":"740b","t":"Imóveis","c":89481.66,"e":43846.01,"p":547.81,"pr":185},{"g":"870","t":"Imóveis","c":88207.24,"e":43221.55,"p":569.93,"pr":186},{"g":"880b","t":"Imóveis","c":87689.39,"e":42967.80,"p":543.17,"pr":187},{"g":"910c","t":"Imóveis","c":86981.66,"e":42621.01,"p":538.75,"pr":189},{"g":"810","t":"Imóveis","c":71213.54,"e":34894.63,"p":464.61,"pr":179},{"g":"1000","t":"Imóveis","c":129462.68,"e":63436.71,"p":787.84,"pr":194},{"g":"1000b","t":"Imóveis","c":172082.99,"e":84320.67,"p":1002.19,"pr":194},{"g":"810b","t":"Imóveis","c":71213.54,"e":34894.63,"p":443.81,"pr":179},{"g":"640","t":"Imóveis","c":102206.70,"e":50081.28,"p":735.07,"pr":157},{"g":"730b","t":"Imóveis","c":100631.08,"e":49309.23,"p":632.30,"pr":180},{"g":"640b","t":"Imóveis","c":148243.67,"e":72639.40,"p":1023.30,"pr":157},{"g":"12154","t":"Imóveis","c":152333.04,"e":74643.19,"p":855.49,"pr":214},{"g":"730c","t":"Imóveis","c":100631.08,"e":49309.23,"p":632.30,"pr":180},{"g":"12147","t":"Imóveis","c":307500.00,"e":150632.27,"p":1707.62,"pr":214},{"g":"840c","t":"Imóveis","c":106820.31,"e":52341.95,"p":733.60,"pr":181},{"g":"12145b","t":"Imóveis","c":82259.84,"e":40307.32,"p":461.55,"pr":213},{"g":"12144","t":"Imóveis","c":98000.00,"e":48144.65,"p":567.71,"pr":214},{"g":"12153","t":"Imóveis","c":61646.52,"e":28862.83,"p":361.74,"pr":216},{"g":"12130","t":"Imóveis","c":84835.28,"e":41569.29,"p":480.65,"pr":208},{"g":"1000c","t":"Imóveis","c":101555.36,"e":80091.18,"p":1017.21,"pr":194},{"g":"910d","t":"Imóveis","c":132202.08,"e":64779.02,"p":906.05,"pr":189},{"g":"1070","t":"Imóveis","c":83927.79,"e":39521.39,"p":513.90,"pr":201},{"g":"12142","t":"Imóveis","c":102470.93,"e":50210.76,"p":583.00,"pr":212},{"g":"651","t":"Imóveis","c":245678.70,"e":120382.56,"p":1813.72,"pr":160},{"g":"1020d","t":"Imóveis","c":81420.10,"e":38661.94,"p":522.83,"pr":196},{"g":"12141b","t":"Imóveis","c":102470.93,"e":48377.12,"p":582.23,"pr":212},{"g":"1060","t":"Imóveis","c":80032.59,"e":38016.88,"p":512.49,"pr":200},{"g":"68832","t":"Imóveis","c":68832.49,"e":32000.00,"p":430.00,"pr":200},{"g":"680b","t":"Imóveis","c":140843.79,"e":69013.46,"p":821.77,"pr":174},{"g":"580","t":"Imóveis","c":570553.67,"e":279571.30,"p":3521.70,"pr":140},{"g":"850b","t":"Imóveis","c":67247.95,"e":32951.50,"p":462.07,"pr":184},{"g":"870b","t":"Imóveis","c":88207.24,"e":43221.55,"p":549.26,"pr":186},{"g":"810c","t":"Imóveis","c":89016.92,"e":43618.29,"p":565.12,"pr":179},{"g":"1070b","t":"Imóveis","c":78892.13,"e":38657.14,"p":504.56,"pr":201},{"g":"12157","t":"Imóveis","c":81976.74,"e":38624.27,"p":454.55,"pr":215},{"g":"810d","t":"Imóveis","c":71213.54,"e":33905.13,"p":483.69,"pr":179},{"g":"760","t":"Imóveis","c":445815.65,"e":218000.00,"p":2700.00,"pr":175},{"g":"1030e","t":"Imóveis","c":71000.00,"e":30714.91,"p":426.99,"pr":197},{"g":"12142b","t":"Imóveis","c":77058.15,"e":36179.70,"p":465.83,"pr":212},{"g":"970","t":"Imóveis","c":272418.96,"e":133485.29,"p":1674.72,"pr":193},{"g":"12143d","t":"Imóveis","c":78027.31,"e":38233.38,"p":466.36,"pr":212},{"g":"900c","t":"Imóveis","c":260944.98,"e":127863.04,"p":1695.58,"pr":189},{"g":"921b","t":"Imóveis","c":120831.83,"e":59207.60,"p":746.70,"pr":191},{"g":"1020e","t":"Imóveis","c":85712.08,"e":40615.80,"p":547.49,"pr":196},{"g":"651b","t":"Imóveis","c":135853.96,"e":63118.03,"p":921.31,"pr":160},{"g":"921c","t":"Imóveis","c":86308.45,"e":41495.23,"p":533.36,"pr":191},{"g":"1010b","t":"Imóveis","c":83368.80,"e":41059.20,"p":536.33,"pr":195},{"g":"12152b","t":"Imóveis","c":76362.61,"e":36094.79,"p":455.33,"pr":214},{"g":"12152c","t":"Imóveis","c":76362.61,"e":37417.68,"p":453.79,"pr":214},{"g":"790","t":"Imóveis","c":81300.00,"e":39729.79,"p":483.70,"pr":196},{"g":"930","t":"Imóveis","c":126607.98,"e":62037.91,"p":798.89,"pr":191},{"g":"730d","t":"Imóveis","c":102217.00,"e":50086.33,"p":711.19,"pr":180},{"g":"1040","t":"Imóveis","c":71323.88,"e":34948.70,"p":410.39,"pr":199},{"g":"810e","t":"Imóveis","c":149376.79,"e":73194.63,"p":920.56,"pr":179},{"g":"1020f","t":"Imóveis","c":83037.28,"e":40000.00,"p":535.56,"pr":196},{"g":"12153b","t":"Imóveis","c":77058.15,"e":36078.53,"p":452.18,"pr":216},{"g":"12149d","t":"Imóveis","c":61646.52,"e":28897.64,"p":368.80,"pr":213},{"g":"1060b","t":"Imóveis","c":64026.07,"e":30170.00,"p":430.00,"pr":200},{"g":"640c","t":"Imóveis","c":140807.82,"e":68995.83,"p":852.69,"pr":157},{"g":"1080b","t":"Imóveis","c":87091.82,"e":42674.99,"p":494.07,"pr":201},{"g":"910e","t":"Imóveis","c":66067.63,"e":32373.14,"p":437.07,"pr":189},{"g":"630","t":"Imóveis","c":157000.00,"e":77215.11,"p":957.47,"pr":154},{"g":"780","t":"Imóveis","c":82285.49,"e":39287.49,"p":533.83,"pr":194},{"g":"1653","t":"Veículos","c":264140.46,"e":117644.66,"p":3495.57,"pr":81},{"g":"660","t":"Imóveis","c":270605.08,"e":127184.39,"p":1786.73,"pr":162},{"g":"1030f","t":"Imóveis","c":83038.50,"e":39028.10,"p":531.58,"pr":197},{"g":"660b","t":"Imóveis","c":562228.84,"e":275000.00,"p":3300.00,"pr":160},{"g":"850c","t":"Imóveis","c":88228.09,"e":38980.29,"p":583.83,"pr":184},{"g":"870c","t":"Imóveis","c":87958.88,"e":39428.14,"p":553.23,"pr":186},{"g":"870d","t":"Imóveis","c":69009.78,"e":33800.00,"p":480.00,"pr":186},{"g":"611","t":"Imóveis","c":135079.01,"e":63487.13,"p":992.07,"pr":149},{"g":"1010c","t":"Imóveis","c":83368.80,"e":39183.34,"p":539.34,"pr":195},{"g":"680c","t":"Imóveis","c":237055.53,"e":111416.00,"p":1400.00,"pr":174},{"g":"921d","t":"Imóveis","c":68852.35,"e":31287.05,"p":428.63,"pr":191},{"g":"1010d","t":"Imóveis","c":85798.35,"e":37741.61,"p":550.02,"pr":195},{"g":"12149e","t":"Imóveis","c":62880.78,"e":29000.00,"p":380.00,"pr":213},{"g":"640d","t":"Imóveis","c":98043.97,"e":46080.67,"p":573.29,"pr":157},{"g":"921e","t":"Imóveis","c":82805.85,"e":38918.75,"p":530.64,"pr":191},{"g":"1090","t":"Imóveis","c":794760.18,"e":380000.00,"p":4500.00,"pr":202},{"g":"1030g","t":"Imóveis","c":86000.00,"e":37590.94,"p":535.56,"pr":197},{"g":"880c","t":"Imóveis","c":169388.74,"e":79612.71,"p":1053.39,"pr":187},{"g":"921f","t":"Imóveis","c":83628.31,"e":39305.31,"p":530.64,"pr":191},{"g":"640e","t":"Imóveis","c":142228.24,"e":66847.27,"p":848.97,"pr":157},{"g":"12141c","t":"Imóveis","c":82803.69,"e":38917.73,"p":467.10,"pr":212},{"g":"12152d","t":"Imóveis","c":62262.36,"e":29000.00,"p":390.00,"pr":214},{"g":"12146","t":"Imóveis","c":103000.00,"e":48647.17,"p":569.25,"pr":214},{"g":"1050","t":"Imóveis","c":80032.59,"e":37615.32,"p":525.39,"pr":200},{"g":"921g","t":"Imóveis","c":85205.05,"e":38231.62,"p":574.99,"pr":189}]};
+// COTAS_DATA_END
+
+// ── PROCESSAR COTAS ──
+const cotas = COTAS_DATA.cotas.map(r => {
+  const vp    = r.c - r.e;
+  const cetAM = TAXA(r.pr, -r.p, vp) * 100;
+  const cetAA = (Math.pow(1 + cetAM / 100, 12) - 1) * 100;
+  const saldo = r.p * r.pr;
+  return { ...r, vp, saldo, cetAM, cetAA };
+});
+
+// ── INICIALIZAR HEADER ──
+document.getElementById('hdr-total').textContent  = COTAS_DATA.total_banco;
+document.getElementById('hdr-data').textContent   = COTAS_DATA.updated;
+document.getElementById('s-banco').textContent    = COTAS_DATA.total_banco;
+document.getElementById('footer-ts').textContent  = 'Fonte: ' + COTAS_DATA.source + ' · ' + COTAS_DATA.updated;
+
+// ── RENDER ──
+function render() {
+  const busca = document.getElementById('busca').value.toLowerCase();
+  const tipo  = document.getElementById('tipo').value;
+  const ordem = document.getElementById('ordem').value;
+
+  let f = cotas.filter(c => {
+    const match     = c.g.toLowerCase().includes(busca) || c.c.toFixed(0).includes(busca);
+    const tipoMatch = !tipo || c.t.includes(tipo);
+    return match && tipoMatch;
+  });
+
+  if      (ordem === 'cet-asc')      f.sort((a,b) => a.cetAM - b.cetAM);
+  else if (ordem === 'credito-desc') f.sort((a,b) => b.c - a.c);
+  else if (ordem === 'credito-asc')  f.sort((a,b) => a.c - b.c);
+  else if (ordem === 'prazo-asc')    f.sort((a,b) => a.pr - b.pr);
+  else if (ordem === 'parcela-asc')  f.sort((a,b) => a.p - b.p);
+  else if (ordem === 'saldo-asc')    f.sort((a,b) => a.saldo - b.saldo);
+
+  document.getElementById('lbl-count').textContent = f.length;
+  document.getElementById('s-total').textContent   = f.length;
+
+  const totalC = f.reduce((s,c) => s + c.c, 0);
+  const minCet = f.length ? Math.min(...f.map(c => c.cetAM)) : 0;
+  const maxC   = f.length ? Math.max(...f.map(c => c.c)) : 0;
+
+  document.getElementById('s-credito').textContent = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
+  document.getElementById('s-mincet').textContent  = minCet.toFixed(4) + '%';
+  document.getElementById('s-max').textContent     = fmt(maxC);
+
+  const tbody = document.getElementById('tbody');
+  if (!f.length) {
+    tbody.innerHTML = '';
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty').style.display = 'none';
+
+  tbody.innerHTML = f.map((c, i) => `
+    <tr>
+      <td class="muted" style="font-size:10px">${i+1}</td>
+      <td class="grupo">${c.g}</td>
+      <td><span class="tag ${c.t === 'Imóveis' ? 'tag-imovel' : 'tag-veiculo'}">${c.t}</span></td>
+      <td class="num credito">${fmt(c.c)}</td>
+      <td class="num muted">${fmt(c.e)}</td>
+      <td class="num muted">${fmt(c.vp)}</td>
+      <td class="num">${fmt(c.p)}</td>
+      <td class="num muted">${c.pr} m</td>
+      <td class="num muted">${fmt(c.saldo)}</td>
+      <td class="num cet ${cetClass(c.cetAM)}">${c.cetAM.toFixed(4)}%</td>
+      <td class="num muted">${c.cetAA.toFixed(2)}%</td>
+    </tr>
+  `).join('');
+}
+
+render();
+</script>
+</body>
+</html>
