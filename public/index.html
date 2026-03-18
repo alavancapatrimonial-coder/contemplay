@@ -291,70 +291,47 @@
     <div style="color:rgba(255,255,255,0.45);font-size:11px;font-family:monospace;text-align:right;" id="exp-date"></div>
   </div>
   <!-- Body -->
-  <div style="background:linear-gradient(135deg,#380202 0%,#7a1315 45%,#ee3124 100%);padding:28px;display:flex;gap:22px;">
-    <!-- Left: tipo breakdown -->
-    <div style="flex:0 0 170px;display:flex;flex-direction:column;gap:14px;">
-      <!-- Imóveis -->
-      <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:22px 16px;text-align:center;border:1px solid rgba(255,255,255,0.18);">
-        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="display:block;margin:0 auto 12px;">
-          <path d="M6 24L26 6L46 24V46H32V32H20V46H6V24Z" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <rect x="11" y="27" width="9" height="8" rx="1" stroke="white" stroke-width="2" fill="none"/>
-          <rect x="32" y="27" width="9" height="8" rx="1" stroke="white" stroke-width="2" fill="none"/>
-          <line x1="26" y1="6" x2="26" y2="3" stroke="white" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <div style="color:#fff;font-size:38px;font-weight:800;line-height:1;" id="exp-nimoveis">0</div>
-        <div style="color:rgba(255,255,255,0.6);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;margin-top:6px;">Imóveis</div>
-      </div>
-      <!-- Veículos -->
-      <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:22px 16px;text-align:center;border:1px solid rgba(255,255,255,0.18);">
-        <svg width="60" height="42" viewBox="0 0 60 42" fill="none" style="display:block;margin:0 auto 12px;">
-          <path d="M4 22H56V30C56 31.1 55.1 32 54 32H6C4.9 32 4 31.1 4 30V22Z" stroke="white" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
-          <path d="M4 22L13 9H47L56 22" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M15 11H45V22" stroke="white" stroke-width="1.4" stroke-linejoin="round" opacity="0.45"/>
-          <circle cx="16" cy="36" r="5.5" stroke="white" stroke-width="2.4" fill="none"/>
-          <circle cx="44" cy="36" r="5.5" stroke="white" stroke-width="2.4" fill="none"/>
-        </svg>
-        <div style="color:#fff;font-size:38px;font-weight:800;line-height:1;" id="exp-nveiculos">0</div>
-        <div style="color:rgba(255,255,255,0.6);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;margin-top:6px;">Veículos</div>
-      </div>
-    </div>
-    <!-- Right: metrics 3x2 grid -->
-    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-content:start;">
-      <!-- CET — destaque verde -->
-      <div style="background:#231f20;border-radius:12px;padding:20px;border:2px solid #1a9e6a;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">CET médio a.m.</div>
-        <div style="font-size:30px;font-weight:800;color:#1a9e6a;line-height:1;" id="exp-cet">—</div>
-        <div style="font-size:10px;color:rgba(26,158,106,0.55);margin-top:5px;font-family:monospace;">taxa efetiva</div>
+  <div style="background:linear-gradient(135deg,#380202 0%,#7a1315 45%,#ee3124 100%);padding:28px 28px 24px;">
+    <!-- Row 1: CET destaque (largo) + Selecionadas + Prazo médio -->
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px;">
+      <!-- CET — destaque verde, ocupa coluna dupla -->
+      <div style="background:#231f20;border-radius:12px;padding:24px 28px;border:2px solid #1a9e6a;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:9px;letter-spacing:0.16em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">CET médio a.m.</div>
+        <div style="font-size:42px;font-weight:800;color:#1a9e6a;line-height:1;letter-spacing:-0.01em;" id="exp-cet">—</div>
+        <div style="font-size:10px;color:rgba(26,158,106,0.5);margin-top:8px;font-family:monospace;">taxa efetiva · Newton-Raphson</div>
       </div>
       <!-- Selecionadas -->
-      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Selecionadas</div>
-        <div style="font-size:30px;font-weight:800;color:#231f20;line-height:1;" id="exp-count">0</div>
-        <div style="font-size:10px;color:#939598;margin-top:5px;font-family:monospace;">cotas</div>
+      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Selecionadas</div>
+        <div style="font-size:42px;font-weight:800;color:#231f20;line-height:1;" id="exp-count">0</div>
+        <div style="font-size:10px;color:#939598;margin-top:8px;font-family:monospace;">cotas</div>
       </div>
       <!-- Prazo médio -->
-      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Prazo médio</div>
-        <div style="font-size:30px;font-weight:800;color:#231f20;line-height:1;" id="exp-prazo">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:5px;font-family:monospace;">meses</div>
+      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Prazo médio</div>
+        <div style="font-size:42px;font-weight:800;color:#231f20;line-height:1;" id="exp-prazo">—</div>
+        <div style="font-size:10px;color:#939598;margin-top:8px;font-family:monospace;">meses</div>
       </div>
+    </div>
+    <!-- Row 2: Crédito + Entrada + Média val. parcelas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
       <!-- Crédito total -->
-      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px;">
+      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
         <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Crédito total</div>
-        <div style="font-size:19px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-credito">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:5px;font-family:monospace;">disponível</div>
+        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-credito">—</div>
+        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">disponível</div>
       </div>
       <!-- Entrada total -->
-      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px;">
+      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
         <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Entrada total</div>
-        <div style="font-size:19px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-entrada">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:5px;font-family:monospace;">estimado</div>
+        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-entrada">—</div>
+        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">estimado</div>
       </div>
       <!-- Média val. parcelas -->
-      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px;">
+      <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
         <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Média val. parcelas</div>
-        <div style="font-size:19px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-valorparc">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:5px;font-family:monospace;">∑ saldo / prazo médio</div>
+        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-valorparc">—</div>
+        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">∑ saldo / prazo médio</div>
       </div>
     </div>
   </div>
@@ -627,13 +604,11 @@ render();
 async function exportJPG() {
   const sel = cotas.filter(c => selectedGroups.has(c.g));
   if (!sel.length) return;
-  const n         = sel.length;
-  const nImoveis  = sel.filter(c => c.t.includes('m\u00f3veis')).length;
-  const nVeiculos = sel.filter(c => c.t.includes('e\u00edculos')).length;
-  const totalC    = sel.reduce((s, c) => s + c.c, 0);
-  const totalE    = sel.reduce((s, c) => s + c.e, 0);
-  const avgCet    = sel.reduce((s, c) => s + c.cetAM, 0) / n;
-  const avgPrazo  = Math.round(sel.reduce((s, c) => s + c.pr, 0) / n);
+  const n            = sel.length;
+  const totalC       = sel.reduce((s, c) => s + c.c, 0);
+  const totalE       = sel.reduce((s, c) => s + c.e, 0);
+  const avgCet       = sel.reduce((s, c) => s + c.cetAM, 0) / n;
+  const avgPrazo     = Math.round(sel.reduce((s, c) => s + c.pr, 0) / n);
   const totalSaldo   = sel.reduce((s, c) => s + c.saldo, 0);
   const avgValorParc = avgPrazo > 0 ? totalSaldo / avgPrazo : 0;
 
@@ -641,8 +616,6 @@ async function exportJPG() {
   const now = new Date();
   document.getElementById('exp-date').textContent      = now.toLocaleDateString('pt-BR');
   document.getElementById('exp-count').textContent     = n;
-  document.getElementById('exp-nimoveis').textContent  = nImoveis;
-  document.getElementById('exp-nveiculos').textContent = nVeiculos;
   document.getElementById('exp-credito').textContent   = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
   document.getElementById('exp-entrada').textContent   = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
   document.getElementById('exp-cet').textContent       = avgCet.toFixed(4) + '%';
