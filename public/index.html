@@ -644,4 +644,10 @@ async function exportJPG() {
     console.error('Erro ao exportar:', err);
     alert('N\u00e3o foi poss\u00edvel gerar a imagem. Verifique o console.');
   } finally {
-    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 1v6M3 5l2.5 2.5L8 5"/><rect x="1" y="8" wi
+    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 1v6M3 5l2.5 2.5L8 5"/><rect x="1" y="8" width="9" height="2" rx="0.5"/></svg> Exportar JPG';
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
