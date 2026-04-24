@@ -264,9 +264,9 @@
     <div class="sel-sep"></div>
     <span>CET m&eacute;dio a.m.: <span class="sel-cet-val" id="sel-cet">&mdash;</span></span>
     <div class="sel-sep"></div>
-    <span>Prazo m&eacute;dio: <strong id="sel-parcela">&mdash;</strong></span>
+    <span>Prazo m&eacute;dio: <strong id="sel-prazo-medio">&mdash;</strong></span>
     <div class="sel-sep"></div>
-    <span>M&eacute;dia val. parcelas: <strong id="sel-valor-parcela">&mdash;</strong></span>
+    <span>Parcela total/m&ecirc;s: <strong id="sel-total-parcela">&mdash;</strong></span>
   </div>
   <div class="sel-actions">
     <button class="btn-export" onclick="exportJPG()" title="Exportar resumo como imagem">
@@ -327,11 +327,11 @@
         <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-entrada">—</div>
         <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">estimado</div>
       </div>
-      <!-- Média val. parcelas -->
+      <!-- Parcela total/mês -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Média val. parcelas</div>
-        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-valorparc">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">∑ saldo / prazo médio</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Parcela total/mês</div>
+        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-total-parcela">—</div>
+        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">soma das parcelas mensais</div>
       </div>
     </div>
   </div>
@@ -450,33 +450,35 @@ function cetClass(v) {
 
 // ── DADOS ──
 // COTAS_DATA_START
-const COTAS_DATA = {"total_banco": 23, "total_leilao": 24, "updated": "2026-04-23", "source": "WhatsApp_Video_2026-04-23", "cotas": [{"g": "12157", "t": "Imóveis", "c": 62253.49, "e": 30504.21, "p": 363.4, "pr": 214}, {"g": "12140", "t": "Imóveis", "c": 79335.37, "e": 38874.33, "p": 470.11, "pr": 210}, {"g": "12153", "t": "Imóveis", "c": 61691.58, "e": 30228.87, "p": 362.16, "pr": 215}, {"g": "12161", "t": "Imóveis", "c": 77114.47, "e": 37786.09, "p": 452.18, "pr": 216}, {"g": "12154", "t": "Imóveis", "c": 77114.47, "e": 37786.09, "p": 455.31, "pr": 213}, {"g": "12160", "t": "Imóveis", "c": 77114.47, "e": 37786.09, "p": 452.18, "pr": 216}, {"g": "12156", "t": "Imóveis", "c": 62253.49, "e": 30504.21, "p": 362.17, "pr": 214}, {"g": "12131", "t": "Imóveis", "c": 78594.25, "e": 38511.18, "p": 487.75, "pr": 207}, {"g": "12146", "t": "Imóveis", "c": 77816.86, "e": 38130.26, "p": 453.24, "pr": 213}, {"g": "12145", "t": "Imóveis", "c": 62253.49, "e": 30504.21, "p": 368.78, "pr": 212}, {"g": "12144", "t": "Imóveis", "c": 62436.9, "e": 30594.08, "p": 367.98, "pr": 212}, {"g": "12144", "t": "Imóveis", "c": 77816.86, "e": 38130.26, "p": 459.45, "pr": 212}, {"g": "12146", "t": "Imóveis", "c": 77114.47, "e": 37786.09, "p": 455.31, "pr": 213}, {"g": "12160", "t": "Imóveis", "c": 61691.58, "e": 30228.87, "p": 361.74, "pr": 216}, {"g": "12145", "t": "Imóveis", "c": 62462.72, "e": 30606.73, "p": 369.28, "pr": 212}, {"g": "1668", "t": "Veículos", "c": 58865.08, "e": 28843.89, "p": 666.17, "pr": 79}, {"g": "1663", "t": "Veículos", "c": 58909.46, "e": 22698.03, "p": 889.14, "pr": 76}, {"g": "1626", "t": "Veículos", "c": 118595.75, "e": 58111.92, "p": 1567.22, "pr": 65}, {"g": "1663", "t": "Veículos", "c": 60507.46, "e": 26522.86, "p": 834.46, "pr": 76}, {"g": "1667", "t": "Veículos", "c": 253300.97, "e": 116566.26, "p": 3136.81, "pr": 89}, {"g": "1672", "t": "Veículos", "c": 280392.16, "e": 133795.79, "p": 3333.73, "pr": 91}, {"g": "1697", "t": "Veículos", "c": 252341.14, "e": 111411.37, "p": 3247.73, "pr": 88}, {"g": "1653", "t": "Veículos", "c": 226871.93, "e": 111167.25, "p": 2568.88, "pr": 77}, {"g": "420", "t": "Imóveis", "c": 83594.87, "e": 44300.0, "p": 1450.94, "pr": 46, "src": "L"}, {"g": "1632", "t": "Veículos", "c": 87669.16, "e": 41900.0, "p": 1108.68, "pr": 68, "src": "L"}, {"g": "4116", "t": "Imóveis", "c": 169211.98, "e": 55500.0, "p": 3015.34, "pr": 62, "src": "L"}, {"g": "12138", "t": "Imóveis", "c": 83018.28, "e": 63000.0, "p": 485.63, "pr": 210, "src": "L"}, {"g": "1682", "t": "Veículos", "c": 120612.21, "e": 58500.0, "p": 1610.14, "pr": 84, "src": "L"}, {"g": "12162", "t": "Imóveis", "c": 101052.36, "e": 49500.0, "p": 565.6, "pr": 218, "src": "L"}, {"g": "600", "t": "Imóveis", "c": 181992.51, "e": 49515.66, "p": 1839.1, "pr": 86, "src": "L"}, {"g": "810", "t": "Imóveis", "c": 87803.28, "e": 83558.82, "p": 405.99, "pr": 179, "src": "L"}, {"g": "870", "t": "Imóveis", "c": 87836.25, "e": 65000.0, "p": 548.08, "pr": 186, "src": "L"}, {"g": "1626", "t": "Veículos", "c": 129105.85, "e": 43039.76, "p": 1767.97, "pr": 67, "src": "L"}, {"g": "1634", "t": "Veículos", "c": 31884.63, "e": 14991.2, "p": 467.89, "pr": 69, "src": "L"}, {"g": "1010", "t": "Imóveis", "c": 67963.44, "e": 33000.0, "p": 306.45, "pr": 195, "src": "L"}, {"g": "1050", "t": "Imóveis", "c": 84395.26, "e": 41350.0, "p": 375.73, "pr": 200, "src": "L"}, {"g": "1050", "t": "Imóveis", "c": 83650.5, "e": 40950.0, "p": 386.76, "pr": 200, "src": "L"}, {"g": "890", "t": "Imóveis", "c": 174573.64, "e": 84584.0, "p": 1120.35, "pr": 187, "src": "L"}, {"g": "1615", "t": "Veículos", "c": 62358.03, "e": 27500.0, "p": 1449.45, "pr": 32, "src": "L"}, {"g": "1622", "t": "Veículos", "c": 64657.8, "e": 29900.0, "p": 1021.69, "pr": 54, "src": "L"}, {"g": "1669", "t": "Veículos", "c": 64950.38, "e": 30000.0, "p": 908.85, "pr": 80, "src": "L"}, {"g": "1611", "t": "Veículos", "c": 62980.35, "e": 28000.0, "p": 1746.23, "pr": 31, "src": "L"}, {"g": "12140", "t": "Imóveis", "c": 79070.22, "e": 22100.0, "p": 472.81, "pr": 211, "src": "L"}, {"g": "1070", "t": "Imóveis", "c": 98364.46, "e": 48000.0, "p": 466.39, "pr": 201, "src": "L"}, {"g": "1617", "t": "Veículos", "c": 69442.45, "e": 50000.0, "p": 1505.19, "pr": 49, "src": "L"}, {"g": "12145", "t": "Imóveis", "c": 122097.85, "e": 59827.96, "p": 551.41, "pr": 213, "src": "L"}, {"g": "12152", "t": "Imóveis", "c": 60789.33, "e": 29500.0, "p": 363.44, "pr": 214, "src": "L"}]};
+const COTAS_DATA = {"total_banco":20,"total_leilao":15,"updated":"2026-04-24","source":"Ademicon_App_Screenshots_2026-04-24","cotas":[{"g":"4116","t":"Imóveis","c":174529.37,"e":67857.69,"p":2926.0,"pr":61},{"g":"12157","t":"Imóveis","c":62253.49,"e":30504.21,"p":363.4,"pr":214},{"g":"12140","t":"Imóveis","c":79335.37,"e":38874.33,"p":470.11,"pr":210},{"g":"12153","t":"Imóveis","c":61691.58,"e":30228.87,"p":362.16,"pr":215},{"g":"12161","t":"Imóveis","c":77114.47,"e":37786.09,"p":452.18,"pr":216},{"g":"12154","t":"Imóveis","c":77114.47,"e":37786.09,"p":455.31,"pr":213},{"g":"12160","t":"Imóveis","c":77114.47,"e":37786.09,"p":452.18,"pr":216},{"g":"12156","t":"Imóveis","c":62253.49,"e":30504.21,"p":362.17,"pr":214},{"g":"12131","t":"Imóveis","c":78594.25,"e":38511.18,"p":487.75,"pr":207},{"g":"12146","t":"Imóveis","c":77816.86,"e":38130.26,"p":453.24,"pr":213},{"g":"12145","t":"Imóveis","c":62253.49,"e":30504.21,"p":368.78,"pr":212},{"g":"12144","t":"Imóveis","c":62436.9,"e":30594.08,"p":367.98,"pr":212},{"g":"12144","t":"Imóveis","c":77816.86,"e":38130.26,"p":459.45,"pr":212},{"g":"12146","t":"Imóveis","c":77114.47,"e":37786.09,"p":455.31,"pr":213},{"g":"1667","t":"Veículos","c":253300.97,"e":116566.26,"p":3136.81,"pr":89},{"g":"12160","t":"Imóveis","c":61691.58,"e":30228.87,"p":361.74,"pr":216},{"g":"12145","t":"Imóveis","c":62462.72,"e":30606.73,"p":369.28,"pr":212},{"g":"1672","t":"Veículos","c":280392.16,"e":133795.79,"p":3333.73,"pr":91},{"g":"1697","t":"Veículos","c":252341.14,"e":111411.37,"p":3247.73,"pr":88},{"g":"1653","t":"Veículos","c":226871.93,"e":111167.25,"p":2568.88,"pr":77},{"g":"1656","t":"Veículos","c":100043.07,"e":53000.43,"p":1112.45,"pr":76,"src":"L"},{"g":"1190","t":"Imóveis","c":82756.53,"e":39650.0,"p":501.61,"pr":203,"src":"L"},{"g":"1615","t":"Veículos","c":69529.74,"e":21866.6,"p":1946.83,"pr":33,"src":"L"},{"g":"1643","t":"Veículos","c":81425.24,"e":34900.0,"p":1024.71,"pr":74,"src":"L"},{"g":"1663","t":"Veículos","c":56006.38,"e":19500.0,"p":874.64,"pr":76,"src":"L"},{"g":"4116","t":"Imóveis","c":169807.82,"e":50000.0,"p":3015.39,"pr":61,"src":"L"},{"g":"1601","t":"Veículos","c":86239.85,"e":29000.0,"p":5559.92,"pr":14,"src":"L"},{"g":"420","t":"Imóveis","c":103535.47,"e":43000.0,"p":2142.06,"pr":45,"src":"L"},{"g":"850","t":"Imóveis","c":82804.58,"e":52900.0,"p":345.59,"pr":183,"src":"L"},{"g":"1621","t":"Veículos","c":65348.83,"e":35000.0,"p":782.5,"pr":59,"src":"L"},{"g":"1100","t":"Imóveis","c":144909.9,"e":70000.0,"p":774.63,"pr":201,"src":"L"},{"g":"1020","t":"Imóveis","c":108159.24,"e":42000.0,"p":667.64,"pr":195,"src":"L"},{"g":"1632","t":"Veículos","c":87905.09,"e":40900.0,"p":1125.22,"pr":67,"src":"L"},{"g":"970","t":"Imóveis","c":195074.09,"e":110000.0,"p":907.51,"pr":193,"src":"L"},{"g":"1050","t":"Imóveis","c":83931.09,"e":42117.93,"p":386.77,"pr":199,"src":"L"}]};
 // COTAS_DATA_END
 
 // ── PROCESSAR COTAS ──
-const cotas = COTAS_DATA.cotas.map(r => {
+// UID único por cota (resolve bug de grupos duplicados)
+const cotas = COTAS_DATA.cotas.map((r, i) => {
   const vp    = r.c - r.e;
   const cetAM = TAXA(r.pr, -r.p, vp) * 100;
   const cetAA = (Math.pow(1 + cetAM / 100, 12) - 1) * 100;
   const saldo = r.p * r.pr;
-  return { ...r, vp, saldo, cetAM, cetAA };
+  const uid   = 'c' + i;
+  return { ...r, uid, vp, saldo, cetAM, cetAA };
 });
 
-// ── SELEÇÃO ──
-const selectedGroups = new Set();
+// ── SELEÇÃO (por uid único, não por grupo) ──
+const selectedCotas = new Set();
 let filteredCotas = [];
 
-function toggleRow(g, checked) {
-  if (checked) selectedGroups.add(g);
-  else selectedGroups.delete(g);
+function toggleRow(uid, checked) {
+  if (checked) selectedCotas.add(uid);
+  else selectedCotas.delete(uid);
   updateSelBar();
   updateChkAll();
 }
 
 function toggleAll(checked) {
   filteredCotas.forEach(c => {
-    if (checked) selectedGroups.add(c.g);
-    else selectedGroups.delete(c.g);
+    if (checked) selectedCotas.add(c.uid);
+    else selectedCotas.delete(c.uid);
   });
   document.querySelectorAll('.row-chk').forEach(chk => chk.checked = checked);
   document.querySelectorAll('#tbody tr').forEach(tr => tr.classList.toggle('selected', checked));
@@ -484,7 +486,7 @@ function toggleAll(checked) {
 }
 
 function clearSelection() {
-  selectedGroups.clear();
+  selectedCotas.clear();
   document.querySelectorAll('.row-chk').forEach(chk => chk.checked = false);
   document.getElementById('chk-all').checked = false;
   document.querySelectorAll('#tbody tr').forEach(tr => tr.classList.remove('selected'));
@@ -494,36 +496,35 @@ function clearSelection() {
 function updateChkAll() {
   const chkAll = document.getElementById('chk-all');
   const total  = filteredCotas.length;
-  const selVis = filteredCotas.filter(c => selectedGroups.has(c.g)).length;
+  const selVis = filteredCotas.filter(c => selectedCotas.has(c.uid)).length;
   chkAll.checked = total > 0 && selVis === total;
   chkAll.indeterminate = selVis > 0 && selVis < total;
 }
 
 function updateSelBar() {
   const bar = document.getElementById('sel-bar');
-  const sel = cotas.filter(c => selectedGroups.has(c.g));
+  const sel = cotas.filter(c => selectedCotas.has(c.uid));
   if (sel.length === 0) { bar.classList.remove('visible'); return; }
   bar.classList.add('visible');
-  const n              = sel.length;
-  const totalC         = sel.reduce((s, c) => s + c.c, 0);
-  const totalE         = sel.reduce((s, c) => s + c.e, 0);
-  const avgCet         = sel.reduce((s, c) => s + c.cetAM, 0) / n;
-  const avgParcela     = sel.reduce((s, c) => s + c.p, 0) / n;
-  const totalSaldo     = sel.reduce((s, c) => s + c.saldo, 0);
-  const avgPrazo       = sel.reduce((s, c) => s + c.pr, 0) / n;
-  const avgValorParc   = avgPrazo > 0 ? totalSaldo / avgPrazo : 0;
-  document.getElementById('sel-count').textContent        = n;
-  document.getElementById('sel-credito').textContent      = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
-  document.getElementById('sel-entrada').textContent      = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
-  document.getElementById('sel-cet').textContent          = avgCet.toFixed(4) + '%';
-  document.getElementById('sel-parcela').textContent      = Math.round(avgPrazo) + ' m';
-  document.getElementById('sel-valor-parcela').textContent = fmt(avgValorParc);
+  const n            = sel.length;
+  const totalC       = sel.reduce((s, c) => s + c.c, 0);
+  const totalE       = sel.reduce((s, c) => s + c.e, 0);
+  const avgCet       = sel.reduce((s, c) => s + c.cetAM, 0) / n;
+  const avgPrazo     = sel.reduce((s, c) => s + c.pr, 0) / n;
+  const totalParcela = sel.reduce((s, c) => s + c.p, 0);
+  document.getElementById('sel-count').textContent         = n;
+  document.getElementById('sel-credito').textContent       = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
+  document.getElementById('sel-entrada').textContent       = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
+  document.getElementById('sel-cet').textContent           = avgCet.toFixed(4) + '%';
+  document.getElementById('sel-prazo-medio').textContent   = Math.round(avgPrazo) + ' m';
+  document.getElementById('sel-total-parcela').textContent = totalParcela >= 1e6 ? fmtM(totalParcela) : fmt(totalParcela);
 }
 
 // ── INIT ──
-document.getElementById('hdr-total').textContent = COTAS_DATA.total_banco;
+const totalCotasBanco = cotas.length; // total geral (banco + leilão)
+document.getElementById('hdr-total').textContent = totalCotasBanco;
 document.getElementById('hdr-data').textContent  = COTAS_DATA.updated;
-document.getElementById('s-banco').textContent   = COTAS_DATA.total_banco;
+document.getElementById('s-banco').textContent   = totalCotasBanco;
 document.getElementById('footer-ts').textContent = 'Fonte: ' + COTAS_DATA.source + ' \u00B7 ' + COTAS_DATA.updated;
 
 // ── RENDER ──
@@ -567,10 +568,10 @@ function render() {
   document.getElementById('empty').style.display = 'none';
 
   tbody.innerHTML = f.map((c, i) => `
-    <tr class="${selectedGroups.has(c.g) ? 'selected' : ''}" onclick="handleRowClick(event,'${c.g}')">
+    <tr class="${selectedCotas.has(c.uid) ? 'selected' : ''}" onclick="handleRowClick(event,'${c.uid}')">
       <td onclick="event.stopPropagation()">
-        <input type="checkbox" class="row-chk" data-g="${c.g}" ${selectedGroups.has(c.g) ? 'checked' : ''}
-          onchange="toggleRow('${c.g}',this.checked);this.closest('tr').classList.toggle('selected',this.checked)">
+        <input type="checkbox" class="row-chk" data-uid="${c.uid}" ${selectedCotas.has(c.uid) ? 'checked' : ''}
+          onchange="toggleRow('${c.uid}',this.checked);this.closest('tr').classList.toggle('selected',this.checked)">
       </td>
       <td class="muted" style="font-size:10px">${i+1}</td>
       <td class="grupo">${c.g}</td>
@@ -588,12 +589,12 @@ function render() {
   updateChkAll();
 }
 
-function handleRowClick(e, g) {
+function handleRowClick(e, uid) {
   if (e.target.type === 'checkbox') return;
-  const chk = document.querySelector('.row-chk[data-g="' + g + '"]');
+  const chk = document.querySelector('.row-chk[data-uid="' + uid + '"]');
   if (chk) {
     chk.checked = !chk.checked;
-    toggleRow(g, chk.checked);
+    toggleRow(uid, chk.checked);
     chk.closest('tr').classList.toggle('selected', chk.checked);
   }
 }
@@ -602,25 +603,24 @@ render();
 
 // ── EXPORTAR JPG ──
 async function exportJPG() {
-  const sel = cotas.filter(c => selectedGroups.has(c.g));
+  const sel = cotas.filter(c => selectedCotas.has(c.uid));
   if (!sel.length) return;
   const n            = sel.length;
   const totalC       = sel.reduce((s, c) => s + c.c, 0);
   const totalE       = sel.reduce((s, c) => s + c.e, 0);
   const avgCet       = sel.reduce((s, c) => s + c.cetAM, 0) / n;
   const avgPrazo     = Math.round(sel.reduce((s, c) => s + c.pr, 0) / n);
-  const totalSaldo   = sel.reduce((s, c) => s + c.saldo, 0);
-  const avgValorParc = avgPrazo > 0 ? totalSaldo / avgPrazo : 0;
+  const totalParcela = sel.reduce((s, c) => s + c.p, 0);
 
   // Preenche dados no card
   const now = new Date();
-  document.getElementById('exp-date').textContent      = now.toLocaleDateString('pt-BR');
-  document.getElementById('exp-count').textContent     = n;
-  document.getElementById('exp-credito').textContent   = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
-  document.getElementById('exp-entrada').textContent   = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
-  document.getElementById('exp-cet').textContent       = avgCet.toFixed(4) + '%';
-  document.getElementById('exp-prazo').textContent     = avgPrazo;
-  document.getElementById('exp-valorparc').textContent = fmt(avgValorParc);
+  document.getElementById('exp-date').textContent         = now.toLocaleDateString('pt-BR');
+  document.getElementById('exp-count').textContent        = n;
+  document.getElementById('exp-credito').textContent      = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
+  document.getElementById('exp-entrada').textContent      = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
+  document.getElementById('exp-cet').textContent          = avgCet.toFixed(4) + '%';
+  document.getElementById('exp-prazo').textContent        = avgPrazo;
+  document.getElementById('exp-total-parcela').textContent = totalParcela >= 1e6 ? fmtM(totalParcela) : fmt(totalParcela);
 
   const btn = document.querySelector('.btn-export');
   btn.textContent = '...';
@@ -644,10 +644,4 @@ async function exportJPG() {
     console.error('Erro ao exportar:', err);
     alert('N\u00e3o foi poss\u00edvel gerar a imagem. Verifique o console.');
   } finally {
-    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 1v6M3 5l2.5 2.5L8 5"/><rect x="1" y="8" width="9" height="2" rx="0.5"/></svg> Exportar JPG';
-    btn.disabled = false;
-  }
-}
-</script>
-</body>
-</html>
+    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 1v6M3 5l2.5 2.5L8 5"/><rect x="1" y="8" wi
