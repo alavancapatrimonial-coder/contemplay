@@ -407,7 +407,6 @@
         <th><input type="checkbox" id="chk-all" onchange="toggleAll(this.checked)" title="Selecionar todos"></th>
         <th>#</th>
         <th>Grupo</th>
-        <th>Tipo</th>
         <th>Origem</th>
         <th class="num">Cr&eacute;dito dispon&iacute;vel</th>
         <th class="num">Vl. entrada</th>
@@ -590,8 +589,7 @@ function render() {
       </td>
       <td class="muted" style="font-size:10px">${i+1}</td>
       <td class="grupo">${c.g}</td>
-      <td><span class="tag \${c.t === 'Im\u00f3veis' ? 'tag-imovel' : c.t.includes('Pesados') ? 'tag-pesado' : 'tag-veiculo'}">\${c.t}</span></td>
-      <td><span class="tag \${c.src === 'L' ? 'tag-leilao' : 'tag-banco'}">\${c.src === 'L' ? 'Leil\u00e3o' : 'Banco'}</span></td>
+      <td><span class="tag ${c.src === 'L' ? 'tag-leilao' : 'tag-banco'}">${c.src === 'L' ? 'Leilão' : 'Banco'}</span></td>
       <td class="num credito">${fmt(c.c)}</td>
       <td class="num muted">${fmt(c.e)}</td>
       <td class="num muted">${fmt(c.vp)}</td>
