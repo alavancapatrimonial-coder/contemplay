@@ -203,6 +203,9 @@
   }
   .tag-imovel  { background: var(--red-lt); color: var(--red); border: 1px solid rgba(238,49,36,0.2); }
   .tag-veiculo { background: rgba(255,190,50,0.10); color: #c88a00; border: 1px solid rgba(255,190,50,0.3); }
+  .tag-pesado  { background: rgba(138,109,200,0.10); color: #6040a0; border: 1px solid rgba(138,109,200,0.3); }
+  .tag-banco   { background: rgba(65,64,66,0.08); color: var(--grafite); border: 1px solid rgba(65,64,66,0.2); }
+  .tag-leilao  { background: rgba(26,158,106,0.10); color: #1a7a54; border: 1px solid rgba(26,158,106,0.3); }
   .cet { font-weight: 700; font-size: 13px; }
   .cet-low  { color: #1a9e6a; }
   .cet-mid  { color: #c88a00; }
@@ -249,7 +252,7 @@
     </div>
   </div>
   <div class="header-meta">
-    <strong id="hdr-total">&mdash;</strong> cotas no banco<br>
+    <strong id="hdr-banco">&mdash;</strong> banco &middot; <strong id="hdr-leilao">&mdash;</strong> leil&atilde;o<br>
     Atualizado em <strong id="hdr-data">&mdash;</strong>
   </div>
 </header>
@@ -346,7 +349,7 @@
   <div class="stat-cell">
     <div class="stat-label">Cotas no filtro</div>
     <div class="stat-value" id="s-total">&mdash;</div>
-    <div class="stat-sub">de <span id="s-banco">&mdash;</span> no banco</div>
+    <div class="stat-sub">de <span id="s-banco">&mdash;</span> banco &middot; <span id="s-leilao">&mdash;</span> leil&atilde;o</div>
   </div>
   <div class="stat-cell">
     <div class="stat-label">Cr&eacute;dito total filtrado</div>
@@ -379,6 +382,12 @@
     <option value="">Todos os tipos</option>
     <option value="Im&oacute;veis">Im&oacute;veis</option>
     <option value="Ve&iacute;culos">Ve&iacute;culos</option>
+    <option value="Ve&iacute;culos Pesados">Ve&iacute;culos Pesados</option>
+  </select>
+  <select id="origem" onchange="render()">
+    <option value="">Banco + Leil&atilde;o</option>
+    <option value="B">Banco</option>
+    <option value="L">Leil&atilde;o</option>
   </select>
   <select id="ordem" onchange="render()">
     <option value="cet-asc">Menor CET a.m.</option>
@@ -399,6 +408,7 @@
         <th>#</th>
         <th>Grupo</th>
         <th>Tipo</th>
+        <th>Origem</th>
         <th class="num">Cr&eacute;dito dispon&iacute;vel</th>
         <th class="num">Vl. entrada</th>
         <th class="num">VP l&iacute;quido</th>
@@ -450,7 +460,7 @@ function cetClass(v) {
 
 // ── DADOS ──
 // COTAS_DATA_START
-const COTAS_DATA = {"total_banco":86,"total_leilao":21,"updated":"2026-06-22","source":"Ademicon_App_Screenshots_2026-06-22","cotas":[{"g":"12144","t":"Imóveis","c":79406.84,"e":38909.35,"p":344.59,"pr":209},{"g":"1670","t":"Veículos","c":52829.61,"e":25035.93,"p":678.36,"pr":77},{"g":"12167","t":"Imóveis","c":91022.4,"e":44600.98,"p":546.36,"pr":215},{"g":"12173","t":"Imóveis","c":100875.07,"e":49428.78,"p":567.69,"pr":216},{"g":"1677","t":"Veículos","c":106108.23,"e":48183.11,"p":1389.72,"pr":80},{"g":"1641","t":"Veículos","c":44927.41,"e":19715.03,"p":711.15,"pr":58},{"g":"1690","t":"Veículos","c":57587.48,"e":25901.37,"p":756.07,"pr":81},{"g":"1663","t":"Veículos","c":39663.73,"e":17761.56,"p":544.53,"pr":74},{"g":"1665","t":"Veículos","c":42160.93,"e":19428.83,"p":558.17,"pr":76},{"g":"1663","t":"Veículos","c":42647.65,"e":18532.31,"p":599.55,"pr":74},{"g":"1030","t":"Imóveis","c":85857.25,"e":42070.05,"p":552.34,"pr":194},{"g":"850","t":"Imóveis","c":88647.4,"e":43437.23,"p":708.51,"pr":140},{"g":"1680","t":"Veículos","c":47292.41,"e":22329.3,"p":598.91,"pr":80},{"g":"860","t":"Imóveis","c":133256.28,"e":65295.58,"p":967.55,"pr":163},{"g":"1630","t":"Veículos","c":200760.96,"e":98372.87,"p":2400.92,"pr":79},{"g":"910","t":"Imóveis","c":69682.68,"e":34144.51,"p":432.81,"pr":186},{"g":"1684","t":"Veículos","c":51050.82,"e":25014.9,"p":604.56,"pr":82},{"g":"840","t":"Imóveis","c":71971.44,"e":35266.01,"p":478.49,"pr":178},{"g":"850","t":"Imóveis","c":71546.28,"e":35057.68,"p":467.06,"pr":181},{"g":"12152","t":"Imóveis","c":77175.65,"e":37816.07,"p":456.45,"pr":211},{"g":"12164","t":"Imóveis","c":77770.06,"e":38107.33,"p":452.19,"pr":215},{"g":"1060","t":"Imóveis","c":90591.9,"e":44390.03,"p":524.21,"pr":197},{"g":"12163","t":"Imóveis","c":77722.0,"e":38083.78,"p":451.95,"pr":215},{"g":"12153","t":"Imóveis","c":77770.06,"e":38107.33,"p":453.24,"pr":213},{"g":"12171","t":"Imóveis","c":77175.65,"e":37816.07,"p":452.18,"pr":216},{"g":"1010","t":"Imóveis","c":69565.37,"e":34087.03,"p":545.62,"pr":151},{"g":"12157","t":"Imóveis","c":77175.65,"e":37816.07,"p":455.9,"pr":212},{"g":"921","t":"Imóveis","c":87899.22,"e":43070.62,"p":534.18,"pr":188},{"g":"10100","t":"Bens Móveis","c":108541.05,"e":53185.11,"p":1241.54,"pr":89},{"g":"12154","t":"Imóveis","c":98205.98,"e":48120.93,"p":569.14,"pr":211},{"g":"1687","t":"Veículos","c":29402.04,"e":14407.0,"p":313.76,"pr":84},{"g":"1080","t":"Imóveis","c":82444.35,"e":40397.73,"p":509.13,"pr":198},{"g":"1050","t":"Imóveis","c":83687.88,"e":41007.06,"p":521.63,"pr":197},{"g":"980","t":"Imóveis","c":85731.34,"e":42008.36,"p":529.57,"pr":190},{"g":"1050","t":"Imóveis","c":111295.95,"e":54535.02,"p":659.46,"pr":197},{"g":"870","t":"Imóveis","c":87617.44,"e":42932.55,"p":588.67,"pr":182},{"g":"1080","t":"Imóveis","c":82495.32,"e":40422.71,"p":509.85,"pr":198},{"g":"12153","t":"Imóveis","c":75852.0,"e":37167.48,"p":462.72,"pr":213},{"g":"1110","t":"Imóveis","c":82495.32,"e":40422.71,"p":505.48,"pr":199},{"g":"12172","t":"Imóveis","c":60681.6,"e":29733.98,"p":362.59,"pr":216},{"g":"12001","t":"Imóveis","c":80175.56,"e":39286.02,"p":488.62,"pr":203},{"g":"1040","t":"Imóveis","c":84449.49,"e":41380.25,"p":524.25,"pr":196},{"g":"12171","t":"Imóveis","c":80700.06,"e":39543.03,"p":455.41,"pr":216},{"g":"12130","t":"Imóveis","c":105333.75,"e":51613.54,"p":607.32,"pr":205},{"g":"12152","t":"Imóveis","c":75852.0,"e":37167.48,"p":457.54,"pr":211},{"g":"12158","t":"Imóveis","c":60681.6,"e":29733.98,"p":370.14,"pr":213},{"g":"1020","t":"Imóveis","c":85132.25,"e":41714.8,"p":548.72,"pr":193},{"g":"12172","t":"Imóveis","c":60681.6,"e":29733.98,"p":363.81,"pr":216},{"g":"921","t":"Imóveis","c":85731.34,"e":42008.36,"p":559.36,"pr":188},{"g":"710","t":"Imóveis","c":147288.24,"e":72171.24,"p":1136.8,"pr":133},{"g":"730","t":"Imóveis","c":159920.5,"e":78361.05,"p":1004.14,"pr":177},{"g":"1020","t":"Imóveis","c":85132.25,"e":41714.8,"p":554.83,"pr":193},{"g":"1626","t":"Veículos","c":170254.25,"e":76345.08,"p":2470.55,"pr":66},{"g":"1654","t":"Veículos","c":43182.16,"e":19325.86,"p":613.61,"pr":69},{"g":"1667","t":"Veículos","c":258064.86,"e":122576.5,"p":3136.83,"pr":87},{"g":"1672","t":"Veículos","c":269651.22,"e":132129.1,"p":3044.81,"pr":89},{"g":"1663","t":"Veículos","c":42318.96,"e":18658.97,"p":588.23,"pr":74},{"g":"1703","t":"Veículos","c":36218.84,"e":15240.57,"p":485.69,"pr":87},{"g":"12000","t":"Imóveis","c":80447.22,"e":39419.14,"p":491.71,"pr":202},{"g":"1040","t":"Imóveis","c":84449.49,"e":41380.25,"p":535.6,"pr":196},{"g":"840","t":"Imóveis","c":89964.29,"e":44082.5,"p":565.28,"pr":178},{"g":"810","t":"Imóveis","c":73267.23,"e":33905.13,"p":483.66,"pr":176},{"g":"1190","t":"Imóveis","c":85191.62,"e":41743.89,"p":497.47,"pr":201},{"g":"1060","t":"Imóveis","c":66530.54,"e":30458.6,"p":408.57,"pr":197},{"g":"1658","t":"Veículos","c":40544.98,"e":16638.58,"p":606.29,"pr":71},{"g":"1020","t":"Imóveis","c":84592.28,"e":41450.22,"p":524.81,"pr":193},{"g":"10100","t":"Bens Móveis","c":212979.04,"e":104359.73,"p":2456.45,"pr":89},{"g":"1665","t":"Veículos","c":34307.36,"e":15567.16,"p":460.15,"pr":76},{"g":"1664","t":"Veículos","c":31188.41,"e":14906.65,"p":402.25,"pr":75},{"g":"1671","t":"Veículos","c":42221.98,"e":19933.99,"p":540.81,"pr":78},{"g":"1653","t":"Veículos","c":268902.71,"e":121528.37,"p":3575.97,"pr":78},{"g":"1653","t":"Veículos","c":388664.8,"e":189205.12,"p":4839.79,"pr":78},{"g":"1630","t":"Veículos","c":198150.88,"e":97093.93,"p":2362.63,"pr":79},{"g":"1638","t":"Veículos","c":35742.58,"e":17513.86,"p":501.79,"pr":58},{"g":"910","t":"Imóveis","c":106015.19,"e":51947.44,"p":644.15,"pr":186},{"g":"651","t":"Imóveis","c":133309.02,"e":60483.03,"p":1032.59,"pr":157},{"g":"1010","t":"Imóveis","c":85773.02,"e":42028.78,"p":558.5,"pr":192},{"g":"1672","t":"Veículos","c":299127.32,"e":146572.39,"p":3331.88,"pr":89},{"g":"870","t":"Imóveis","c":108594.56,"e":53211.33,"p":696.41,"pr":183},{"g":"670","t":"Imóveis","c":114538.98,"e":56124.1,"p":778.62,"pr":162},{"g":"1030","t":"Imóveis","c":68346.56,"e":33489.81,"p":436.88,"pr":194},{"g":"4116","t":"Veículos Pesados","c":176209.04,"e":71653.13,"p":2921.08,"pr":59},{"g":"1668","t":"Veículos","c":40544.98,"e":18264.82,"p":543.79,"pr":77},{"g":"1690","t":"Veículos","c":39011.34,"e":17355.87,"p":516.73,"pr":81},{"g":"1675","t":"Veículos","c":184299.74,"e":85190.02,"p":2391.13,"pr":79},{"g":"1623","t":"Veículos","c":32983.99,"e":15936.13,"p":496.98,"pr":54},{"g":"1617","t":"Veículos","c":104152.74,"e":49500.99,"p":2152.01,"pr":47,"src":"L"},{"g":"1675","t":"Veículos","c":180782.61,"e":82356.28,"p":2374.64,"pr":79,"src":"L"},{"g":"1684","t":"Veículos","c":57781.6,"e":24000.0,"p":803.99,"pr":82,"src":"L"},{"g":"1678","t":"Veículos","c":69788.26,"e":33500.0,"p":788.62,"pr":80,"src":"L"},{"g":"12154","t":"Imóveis","c":76409.11,"e":37300.1,"p":455.4,"pr":211,"src":"L"},{"g":"12157","t":"Imóveis","c":49509.17,"e":34000.0,"p":154.97,"pr":213,"src":"L"},{"g":"12151","t":"Imóveis","c":75406.09,"e":39900.0,"p":338.79,"pr":214,"src":"L"},{"g":"12173","t":"Imóveis","c":75696.1,"e":38800.0,"p":340.32,"pr":216,"src":"L"},{"g":"850","t":"Imóveis","c":84320.66,"e":51500.0,"p":345.57,"pr":181,"src":"L"},{"g":"1627","t":"Veículos","c":105096.24,"e":49635.99,"p":1442.53,"pr":64,"src":"L"},{"g":"1100","t":"Imóveis","c":136444.5,"e":66000.0,"p":798.35,"pr":200,"src":"L"},{"g":"1618","t":"Veículos","c":107797.46,"e":49988.99,"p":2113.59,"pr":44,"src":"L"},{"g":"520","t":"Imóveis","c":181193.56,"e":79900.0,"p":1842.09,"pr":101,"src":"L"},{"g":"1020","t":"Imóveis","c":6712.9,"e":3000.0,"p":156.78,"pr":193,"src":"L"},{"g":"1020","t":"Imóveis","c":4782.2,"e":2900.0,"p":147.41,"pr":193,"src":"L"},{"g":"1630","t":"Veículos","c":393570.54,"e":175807.4,"p":4457.32,"pr":77,"src":"L"},{"g":"30","t":"Serviços","c":18358.67,"e":10700.0,"p":591.56,"pr":24,"src":"L"},{"g":"1612","t":"Veículos","c":62825.78,"e":29991.87,"p":1474.49,"pr":29,"src":"L"},{"g":"1190","t":"Imóveis","c":81804.72,"e":34000.0,"p":510.33,"pr":201,"src":"L"},{"g":"900","t":"Imóveis","c":215528.58,"e":91599.64,"p":1391.27,"pr":187,"src":"L"},{"g":"530","t":"Imóveis","c":572609.84,"e":300000.0,"p":3656.82,"pr":114,"src":"L"}]};
+const COTAS_DATA = {"total_banco":29,"total_leilao":22,"updated":"2026-06-24","source":"Ademicon_App_Screenshots_2026-06-24","cotas":[{"g":"710","t":"Imóveis","c":206836.64,"e":97213.22,"p":1523.56,"pr":133},{"g":"1665","t":"Veículos","c":42177.19,"e":19445.09,"p":558.17,"pr":76},{"g":"1694","t":"Veículos","c":58419.39,"e":25122.76,"p":782.19,"pr":84},{"g":"1664","t":"Veículos","c":42042.73,"e":19172.84,"p":565.01,"pr":75},{"g":"1663","t":"Veículos","c":42664.09,"e":18548.75,"p":599.55,"pr":74},{"g":"1688","t":"Veículos","c":28702.13,"e":14064.04,"p":323.06,"pr":81},{"g":"1670","t":"Veículos","c":52849.98,"e":25056.3,"p":678.36,"pr":77},{"g":"12153","t":"Imóveis","c":75881.25,"e":37181.81,"p":462.72,"pr":213},{"g":"1110","t":"Imóveis","c":82527.14,"e":40438.3,"p":505.48,"pr":199},{"g":"12001","t":"Imóveis","c":80206.48,"e":39301.18,"p":488.62,"pr":203},{"g":"600","t":"Imóveis","c":297775.57,"e":145910.03,"p":2871.59,"pr":83},{"g":"12152","t":"Imóveis","c":75881.25,"e":37181.81,"p":457.54,"pr":211},{"g":"921","t":"Imóveis","c":85764.4,"e":42024.56,"p":559.36,"pr":188},{"g":"1654","t":"Veículos","c":43198.81,"e":19342.51,"p":613.61,"pr":69},{"g":"1667","t":"Veículos","c":258164.39,"e":122676.03,"p":3136.83,"pr":87},{"g":"1672","t":"Veículos","c":269755.21,"e":132180.05,"p":3044.81,"pr":89},{"g":"1663","t":"Veículos","c":42335.29,"e":18675.3,"p":588.23,"pr":74},{"g":"1040","t":"Imóveis","c":84482.06,"e":41396.21,"p":535.6,"pr":196},{"g":"1658","t":"Veículos","c":40560.62,"e":16654.22,"p":606.29,"pr":71},{"g":"1671","t":"Veículos","c":42238.27,"e":19950.28,"p":540.81,"pr":78},{"g":"1653","t":"Veículos","c":269006.42,"e":121632.08,"p":3575.97,"pr":78},{"g":"1653","t":"Veículos","c":388814.69,"e":189355.01,"p":4839.79,"pr":78},{"g":"1630","t":"Veículos","c":198227.3,"e":97131.38,"p":2362.63,"pr":79},{"g":"1672","t":"Veículos","c":299242.69,"e":146628.92,"p":3331.88,"pr":89},{"g":"1657","t":"Veículos","c":57443.19,"e":25943.05,"p":778.23,"pr":75},{"g":"4116","t":"Veículos Pesados","c":176277.0,"e":71721.09,"p":2921.08,"pr":59},{"g":"1668","t":"Veículos","c":40560.62,"e":18280.46,"p":543.79,"pr":77},{"g":"1690","t":"Veículos","c":39026.38,"e":17370.91,"p":516.73,"pr":81},{"g":"1675","t":"Veículos","c":184370.81,"e":85261.09,"p":2391.13,"pr":79},{"g":"1610","t":"Veículos","c":35024.33,"e":18000.0,"p":785.65,"pr":26,"src":"L"},{"g":"1640","t":"Veículos","c":49630.62,"e":23341.31,"p":742.56,"pr":57,"src":"L"},{"g":"1612","t":"Veículos","c":62961.64,"e":30127.73,"p":1474.49,"pr":29,"src":"L"},{"g":"700","t":"Imóveis","c":110455.71,"e":54123.3,"p":576.11,"pr":173,"src":"L"},{"g":"590","t":"Imóveis","c":140327.26,"e":70000.0,"p":827.12,"pr":142,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1173","t":"Veículos","c":70512.86,"e":46000.0,"p":3993.75,"pr":10,"src":"L"},{"g":"1620","t":"Veículos","c":66436.5,"e":16500.0,"p":1908.28,"pr":37,"src":"L"},{"g":"1611","t":"Veículos","c":35360.79,"e":10450.0,"p":1161.37,"pr":28,"src":"L"},{"g":"1611","t":"Veículos","c":35021.62,"e":10455.0,"p":1146.92,"pr":28,"src":"L"},{"g":"1657","t":"Veículos","c":40324.56,"e":14950.0,"p":639.26,"pr":75,"src":"L"},{"g":"1657","t":"Veículos","c":40324.56,"e":14955.0,"p":639.26,"pr":75,"src":"L"},{"g":"890","t":"Imóveis","c":282602.64,"e":135000.0,"p":1738.12,"pr":184,"src":"L"},{"g":"970","t":"Imóveis","c":170930.26,"e":77000.0,"p":1013.56,"pr":190,"src":"L"},{"g":"1645","t":"Veículos","c":38468.57,"e":18000.0,"p":617.3,"pr":60,"src":"L"},{"g":"1644","t":"Veículos","c":157214.12,"e":75000.0,"p":1813.11,"pr":68,"src":"L"},{"g":"710","t":"Imóveis","c":178781.0,"e":95000.0,"p":1042.67,"pr":133,"src":"L"},{"g":"900","t":"Imóveis","c":172515.44,"e":89900.0,"p":822.87,"pr":186,"src":"L"}]};
 // COTAS_DATA_END
 
 // ── PROCESSAR COTAS ──
@@ -521,10 +531,13 @@ function updateSelBar() {
 }
 
 // ── INIT ──
-const totalCotasBanco = cotas.length; // total geral (banco + leilão)
-document.getElementById('hdr-total').textContent = totalCotasBanco;
-document.getElementById('hdr-data').textContent  = COTAS_DATA.updated;
-document.getElementById('s-banco').textContent   = totalCotasBanco;
+const totalBanco  = cotas.filter(c => c.src !== 'L').length;
+const totalLeilao = cotas.filter(c => c.src === 'L').length;
+document.getElementById('hdr-banco').textContent  = totalBanco;
+document.getElementById('hdr-leilao').textContent = totalLeilao;
+document.getElementById('hdr-data').textContent   = COTAS_DATA.updated;
+document.getElementById('s-banco').textContent    = totalBanco;
+document.getElementById('s-leilao').textContent   = totalLeilao;
 document.getElementById('footer-ts').textContent = 'Fonte: ' + COTAS_DATA.source + ' \u00B7 ' + COTAS_DATA.updated;
 
 // ── RENDER ──
@@ -533,10 +546,12 @@ function render() {
   const tipo  = document.getElementById('tipo').value;
   const ordem = document.getElementById('ordem').value;
 
+  const origem = document.getElementById('origem').value;
   let f = cotas.filter(c => {
-    const match     = c.g.toLowerCase().includes(busca) || c.c.toFixed(0).includes(busca);
-    const tipoMatch = !tipo || c.t.includes(tipo);
-    return match && tipoMatch;
+    const match      = c.g.toLowerCase().includes(busca) || c.c.toFixed(0).includes(busca);
+    const tipoMatch  = !tipo || c.t.includes(tipo);
+    const origemMatch = !origem || (origem === 'L' ? c.src === 'L' : c.src !== 'L');
+    return match && tipoMatch && origemMatch;
   });
 
   if      (ordem === 'cet-asc')      f.sort((a,b) => a.cetAM - b.cetAM);
@@ -575,7 +590,8 @@ function render() {
       </td>
       <td class="muted" style="font-size:10px">${i+1}</td>
       <td class="grupo">${c.g}</td>
-      <td><span class="tag ${c.t === 'Im\u00f3veis' ? 'tag-imovel' : 'tag-veiculo'}">${c.t}</span></td>
+      <td><span class="tag \${c.t === 'Im\u00f3veis' ? 'tag-imovel' : c.t.includes('Pesados') ? 'tag-pesado' : 'tag-veiculo'}">\${c.t}</span></td>
+      <td><span class="tag \${c.src === 'L' ? 'tag-leilao' : 'tag-banco'}">\${c.src === 'L' ? 'Leil\u00e3o' : 'Banco'}</span></td>
       <td class="num credito">${fmt(c.c)}</td>
       <td class="num muted">${fmt(c.e)}</td>
       <td class="num muted">${fmt(c.vp)}</td>
