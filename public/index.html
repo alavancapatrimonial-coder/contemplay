@@ -3,25 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alavanca — Cotas Contempladas</title>
+<title>Racon — Cartas Contempladas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Mulish:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="racon-favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root {
-    --red:      #ee3124;
-    --red-dk:   #7a1315;
-    --red-lt:   rgba(238,49,36,0.07);
-    --red-md:   rgba(238,49,36,0.14);
-    --black:    #231f20;
-    --grafite:  #414042;
-    --gray:     #939598;
-    --gray-lt:  #dcddde;
+    /* Racon Consórcios — paleta oficial */
+    --red:      #00B3E7;              /* Ciano Racon (acento) */
+    --red-dk:   #002E5F;              /* Marinho Racon */
+    --red-lt:   rgba(0,179,231,0.08);
+    --red-md:   rgba(0,179,231,0.16);
+    --black:    #002E5F;              /* Marinho Racon (texto/fundos) */
+    --navy-dp:  #121B2D;
+    --grafite:  #29305A;              /* Índigo de apoio */
+    --gray:     #6b7a8c;
+    --gray-lt:  #E1E0DC;              /* Cinza claro Racon */
     --bg:       #ffffff;
-    --bg-soft:  #f7f7f7;
-    --border:   #e8e8e8;
+    --bg-soft:  #f4f5f7;
+    --border:   #E1E0DC;
+    --danger:   #d64545;
     --mono:     'DM Mono', monospace;
-    --sans:     'Plus Jakarta Sans', sans-serif;
+    --sans:     'Mulish', sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,7 +51,7 @@
     z-index: 100;
   }
   .logo { display: flex; align-items: center; gap: 16px; }
-  .logo-img { height: 32px; width: auto; object-fit: contain; }
+  .logo-img { height: 26px; width: auto; object-fit: contain; }
   .logo-divider { width: 1px; height: 26px; background: rgba(255,255,255,0.15); }
   .logo-title { display: flex; flex-direction: column; gap: 1px; }
   .logo-main {
@@ -96,7 +100,7 @@
     font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
     padding: 5px 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
   }
-  .btn-clear:hover { border-color: var(--red); color: var(--red); }
+  .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
   .btn-export {
     background: var(--black); border: 1px solid var(--black);
     border-radius: 4px; color: #fff; font-family: var(--mono);
@@ -201,15 +205,15 @@
     display: inline-block; font-size: 9px; letter-spacing: 0.1em;
     text-transform: uppercase; padding: 3px 8px; border-radius: 100px; font-weight: 600;
   }
-  .tag-imovel  { background: var(--red-lt); color: var(--red); border: 1px solid rgba(238,49,36,0.2); }
-  .tag-veiculo { background: rgba(255,190,50,0.10); color: #c88a00; border: 1px solid rgba(255,190,50,0.3); }
+  .tag-imovel  { background: rgba(0,179,231,0.10); color: #0080a8; border: 1px solid rgba(0,179,231,0.35); }
+  .tag-veiculo { background: rgba(0,46,95,0.07); color: var(--black); border: 1px solid rgba(0,46,95,0.25); }
   .tag-pesado  { background: rgba(138,109,200,0.10); color: #6040a0; border: 1px solid rgba(138,109,200,0.3); }
   .tag-banco   { background: rgba(65,64,66,0.08); color: var(--grafite); border: 1px solid rgba(65,64,66,0.2); }
   .tag-leilao  { background: rgba(26,158,106,0.10); color: #1a7a54; border: 1px solid rgba(26,158,106,0.3); }
   .cet { font-weight: 700; font-size: 13px; }
   .cet-low  { color: #1a9e6a; }
   .cet-mid  { color: #c88a00; }
-  .cet-high { color: var(--red); }
+  .cet-high { color: var(--danger); }
   .muted { color: var(--gray); }
   input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--red); cursor: pointer; }
 
@@ -226,8 +230,8 @@
     display: flex; align-items: center; justify-content: space-between;
     margin-top: auto; background: var(--bg);
   }
-  .footer-logo img { height: 22px; width: auto; object-fit: contain; opacity: 0.35; filter: invert(1) brightness(0); }
-  .footer-meta { font-family: var(--mono); font-size: 10px; color: var(--gray-lt); }
+  .footer-logo img { height: 18px; width: auto; object-fit: contain; opacity: 0.85; }
+  .footer-meta { font-family: var(--mono); font-size: 10px; color: var(--gray); }
 
   @media (max-width: 768px) {
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
@@ -244,11 +248,11 @@
 
 <header>
   <div class="logo">
-    <img src="alavanca-patrimonial.png" alt="Alavanca Patrimonial" class="logo-img">
+    <img src="racon-consorcios-branco.png" alt="Racon Consórcios" class="logo-img">
     <div class="logo-divider"></div>
     <div class="logo-title">
       <div class="logo-main">Cotas <span>Contempladas</span></div>
-      <div class="logo-sub">Cartas Contempladas Racon &middot; Alavanca Patrimonial</div>
+      <div class="logo-sub">Cartas Contempladas &middot; Racon Cons&oacute;rcios</div>
     </div>
   </div>
   <div class="header-meta">
@@ -283,10 +287,10 @@
 </div>
 
 <!-- ── EXPORT CARD (hidden, rendered to JPG) ── -->
-<div id="export-card" style="position:fixed;left:-9999px;top:0;width:800px;font-family:'Plus Jakarta Sans',sans-serif;overflow:hidden;">
+<div id="export-card" style="position:fixed;left:-9999px;top:0;width:800px;font-family:'Mulish',sans-serif;overflow:hidden;">
   <!-- Header -->
-  <div style="background:#231f20;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #ee3124;">
-    <img src="alavanca-patrimonial.png" alt="Alavanca" style="height:30px;object-fit:contain;">
+  <div style="background:#002E5F;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #00B3E7;">
+    <img src="racon-consorcios-branco.png" alt="Racon Consórcios" style="height:24px;object-fit:contain;">
     <div style="text-align:center;">
       <div style="color:#fff;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;">Resumo · Cotas Contempladas</div>
       <div style="color:rgba(255,255,255,0.35);font-size:10px;letter-spacing:0.1em;margin-top:2px;font-family:monospace;">CARTAS CONTEMPLADAS RACON</div>
@@ -294,53 +298,53 @@
     <div style="color:rgba(255,255,255,0.45);font-size:11px;font-family:monospace;text-align:right;" id="exp-date"></div>
   </div>
   <!-- Body -->
-  <div style="background:linear-gradient(135deg,#380202 0%,#7a1315 45%,#ee3124 100%);padding:28px 28px 24px;">
+  <div style="background:linear-gradient(135deg,#121B2D 0%,#002E5F 50%,#00B3E7 100%);padding:28px 28px 24px;">
     <!-- Row 1: CET destaque (largo) + Selecionadas + Prazo médio -->
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-bottom:14px;">
       <!-- CET — destaque verde, ocupa coluna dupla -->
-      <div style="background:#231f20;border-radius:12px;padding:24px 28px;border:2px solid #1a9e6a;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-size:9px;letter-spacing:0.16em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">CET médio a.m.</div>
+      <div style="background:#121B2D;border-radius:12px;padding:24px 28px;border:2px solid #1a9e6a;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:9px;letter-spacing:0.16em;color:#6b7a8c;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">CET médio a.m.</div>
         <div style="font-size:42px;font-weight:800;color:#1a9e6a;line-height:1;letter-spacing:-0.01em;" id="exp-cet">—</div>
         <div style="font-size:10px;color:rgba(26,158,106,0.5);margin-top:8px;font-family:monospace;">taxa efetiva · Newton-Raphson</div>
       </div>
       <!-- Selecionadas -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Selecionadas</div>
-        <div style="font-size:42px;font-weight:800;color:#231f20;line-height:1;" id="exp-count">0</div>
-        <div style="font-size:10px;color:#939598;margin-top:8px;font-family:monospace;">cotas</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Selecionadas</div>
+        <div style="font-size:42px;font-weight:800;color:#002E5F;line-height:1;" id="exp-count">0</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:8px;font-family:monospace;">cotas</div>
       </div>
       <!-- Prazo médio -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Prazo médio</div>
-        <div style="font-size:42px;font-weight:800;color:#231f20;line-height:1;" id="exp-prazo">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:8px;font-family:monospace;">meses</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:10px;font-family:monospace;">Prazo médio</div>
+        <div style="font-size:42px;font-weight:800;color:#002E5F;line-height:1;" id="exp-prazo">—</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:8px;font-family:monospace;">meses</div>
       </div>
     </div>
     <!-- Row 2: Crédito + Entrada + Média val. parcelas -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
       <!-- Crédito total -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Crédito total</div>
-        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-credito">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">disponível</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Crédito total</div>
+        <div style="font-size:22px;font-weight:700;color:#002E5F;line-height:1.2;" id="exp-credito">—</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:6px;font-family:monospace;">disponível</div>
       </div>
       <!-- Entrada total -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Entrada total</div>
-        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-entrada">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">estimado</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Entrada total</div>
+        <div style="font-size:22px;font-weight:700;color:#002E5F;line-height:1.2;" id="exp-entrada">—</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:6px;font-family:monospace;">estimado</div>
       </div>
       <!-- Parcela total/mês -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
-        <div style="font-size:9px;letter-spacing:0.14em;color:#939598;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Parcela total/mês</div>
-        <div style="font-size:22px;font-weight:700;color:#231f20;line-height:1.2;" id="exp-total-parcela">—</div>
-        <div style="font-size:10px;color:#939598;margin-top:6px;font-family:monospace;">soma das parcelas mensais</div>
+        <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Parcela total/mês</div>
+        <div style="font-size:22px;font-weight:700;color:#002E5F;line-height:1.2;" id="exp-total-parcela">—</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:6px;font-family:monospace;">soma das parcelas mensais</div>
       </div>
     </div>
   </div>
   <!-- Footer -->
-  <div style="background:#1a1617;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);">
-    <div style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-family:monospace;">Alavanca Patrimonial · Cartas Contempladas Racon</div>
+  <div style="background:#121B2D;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-family:monospace;">Racon Consórcios · Cartas Contempladas</div>
   </div>
 </div>
 
@@ -425,7 +429,7 @@
 
 <footer>
   <div class="footer-logo">
-    <img src="alavanca-patrimonial.png" alt="Alavanca Patrimonial">
+    <img src="racon-consorcios-positivo.png" alt="Racon Consórcios">
   </div>
   <div class="footer-meta" id="footer-ts">&mdash;</div>
 </footer>
@@ -647,7 +651,7 @@ async function exportJPG() {
       scale: 2,
       useCORS: true,
       allowTaint: true,
-      backgroundColor: '#231f20',
+      backgroundColor: '#002E5F',
       logging: false,
       width: 800
     });
