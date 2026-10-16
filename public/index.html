@@ -675,7 +675,6 @@ async function exportJPG() {
   document.getElementById('exp-count').textContent        = n;
   document.getElementById('exp-credito').textContent      = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
   document.getElementById('exp-entrada').textContent      = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
-  document.getElementById('exp-entrada-sub').textContent  = AGIO_PCT ? 'inclui ágio de ' + AGIO_PCT + '% do crédito' : 'estimado';
   document.getElementById('exp-cet').textContent          = avgCet.toFixed(4) + '%';
   document.getElementById('exp-prazo').textContent        = avgPrazo;
   document.getElementById('exp-total-parcela').textContent = totalParcela >= 1e6 ? fmtM(totalParcela) : fmt(totalParcela);
