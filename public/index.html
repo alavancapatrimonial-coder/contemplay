@@ -176,6 +176,18 @@
   }
   select:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-lt); }
   select option { background: var(--bg); color: var(--black); }
+  .agio-wrap { display: flex; align-items: center; gap: 8px; }
+  .agio-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); white-space: nowrap; }
+  .agio-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg-soft); }
+  .agio-seg button {
+    background: transparent; border: none; border-right: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12px; color: var(--black);
+    padding: 8px 11px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .agio-seg button:last-child { border-right: none; }
+  .agio-seg button:hover { background: var(--red-lt); }
+  .agio-seg button.active { background: var(--black); color: #fff; font-weight: 600; }
+  .agio-sub { display: block; font-size: 10px; color: var(--red); margin-top: 2px; }
   .count-badge { font-family: var(--mono); font-size: 11px; color: var(--gray); margin-left: auto; white-space: nowrap; }
   .count-badge strong { color: var(--black); }
 
@@ -332,7 +344,7 @@
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
         <div style="font-size:9px;letter-spacing:0.14em;color:#6b7a8c;text-transform:uppercase;margin-bottom:8px;font-family:monospace;">Entrada total</div>
         <div style="font-size:22px;font-weight:700;color:#002E5F;line-height:1.2;" id="exp-entrada">—</div>
-        <div style="font-size:10px;color:#6b7a8c;margin-top:6px;font-family:monospace;">estimado</div>
+        <div style="font-size:10px;color:#6b7a8c;margin-top:6px;font-family:monospace;" id="exp-entrada-sub">estimado</div>
       </div>
       <!-- Parcela total/mês -->
       <div style="background:rgba(255,255,255,0.95);border-radius:12px;padding:20px 22px;">
@@ -373,7 +385,7 @@
 
 <div class="formula-pill">
   <code>=TAXA(prazo; -parcela; cr&eacute;dito&minus;entrada)</code>
-  &nbsp;&middot;&nbsp; VP = Cr&eacute;dito &minus; Entrada &nbsp;&middot;&nbsp; PGTO = &minus;Parcela &nbsp;&middot;&nbsp; Solu&ccedil;&atilde;o Newton-Raphson (id&ecirc;ntico ao Excel)
+  &nbsp;&middot;&nbsp; VP = Cr&eacute;dito &minus; (Entrada + &Aacute;gio) &nbsp;&middot;&nbsp; &Aacute;gio = <strong id="agio-pill">0%</strong> do cr&eacute;dito &nbsp;&middot;&nbsp; PGTO = &minus;Parcela &nbsp;&middot;&nbsp; Solu&ccedil;&atilde;o Newton-Raphson (id&ecirc;ntico ao Excel)
 </div>
 
 <div class="controls">
@@ -400,6 +412,17 @@
     <option value="parcela-asc">Menor parcela</option>
     <option value="saldo-asc">Menor saldo devedor</option>
   </select>
+  <div class="agio-wrap" title="Ágio do vendedor: percentual sobre o crédito somado à entrada">
+    <span class="agio-label">&Aacute;gio vendedor</span>
+    <div class="agio-seg" id="agio-seg">
+      <button data-p="0" class="active">Sem</button>
+      <button data-p="1">1%</button>
+      <button data-p="2">2%</button>
+      <button data-p="3">3%</button>
+      <button data-p="4">4%</button>
+      <button data-p="5">5%</button>
+    </div>
+  </div>
   <div class="count-badge"><strong id="lbl-count">&mdash;</strong> cotas</div>
 </div>
 
@@ -413,7 +436,7 @@
         <th>Tipo</th>
         <th>Origem</th>
         <th class="num">Cr&eacute;dito dispon&iacute;vel</th>
-        <th class="num">Vl. entrada</th>
+        <th class="num" id="th-entrada">Vl. entrada</th>
         <th class="num">VP l&iacute;quido</th>
         <th class="num">Parcela/m&ecirc;s</th>
         <th class="num">Prazo</th>
@@ -468,14 +491,29 @@ const COTAS_DATA = {"total_banco": 37, "total_leilao": 0, "updated": "2026-10-09
 
 // ── PROCESSAR COTAS ──
 // UID único por cota (resolve bug de grupos duplicados)
-const cotas = COTAS_DATA.cotas.map((r, i) => {
-  const vp    = r.c - r.e;
-  const cetAM = TAXA(r.pr, -r.p, vp) * 100;
-  const cetAA = (Math.pow(1 + cetAM / 100, 12) - 1) * 100;
-  const saldo = r.p * r.pr;
-  const uid   = 'c' + i;
-  return { ...r, uid, vp, saldo, cetAM, cetAA };
-});
+let AGIO_PCT = 0; // ágio do vendedor, % sobre o crédito, somado à entrada
+const cotas = COTAS_DATA.cotas.map((r, i) => ({ ...r, eBase: r.e, uid: 'c' + i }));
+function recalcCotas() {
+  cotas.forEach(c => {
+    c.agio  = c.c * AGIO_PCT / 100;
+    c.e     = c.eBase + c.agio;
+    c.vp    = c.c - c.e;
+    c.cetAM = TAXA(c.pr, -c.p, c.vp) * 100;
+    c.cetAA = (Math.pow(1 + c.cetAM / 100, 12) - 1) * 100;
+    c.saldo = c.p * c.pr;
+  });
+}
+recalcCotas();
+function setAgio(p) {
+  AGIO_PCT = p;
+  document.querySelectorAll('#agio-seg button').forEach(b => b.classList.toggle('active', +b.dataset.p === p));
+  document.getElementById('agio-pill').textContent = p + '%';
+  document.getElementById('th-entrada').textContent = p ? 'Entrada + ágio ' + p + '%' : 'Vl. entrada';
+  recalcCotas();
+  render();
+  updateSelBar();
+}
+document.querySelectorAll('#agio-seg button').forEach(b => b.addEventListener('click', () => setAgio(+b.dataset.p)));
 
 // ── SELEÇÃO (por uid único, não por grupo) ──
 const selectedCotas = new Set();
@@ -596,7 +634,7 @@ function render() {
       <td><span class="tag ${c.t === 'Imóveis' ? 'tag-imovel' : c.t.includes('Pesados') ? 'tag-pesado' : 'tag-veiculo'}">${c.t}</span></td>
       <td><span class="tag ${c.src === 'L' ? 'tag-leilao' : 'tag-banco'}">${c.src === 'L' ? 'Leilão' : 'Banco'}</span></td>
       <td class="num credito">${fmt(c.c)}</td>
-      <td class="num muted">${fmt(c.e)}</td>
+      <td class="num muted">${fmt(c.e)}${AGIO_PCT ? `<span class="agio-sub">+ ${fmt(c.agio)}</span>` : ''}</td>
       <td class="num muted">${fmt(c.vp)}</td>
       <td class="num">${fmt(c.p)}</td>
       <td class="num muted">${c.pr} m</td>
@@ -637,6 +675,7 @@ async function exportJPG() {
   document.getElementById('exp-count').textContent        = n;
   document.getElementById('exp-credito').textContent      = totalC >= 1e6 ? fmtM(totalC) : fmt(totalC);
   document.getElementById('exp-entrada').textContent      = totalE >= 1e6 ? fmtM(totalE) : fmt(totalE);
+  document.getElementById('exp-entrada-sub').textContent  = AGIO_PCT ? 'inclui ágio de ' + AGIO_PCT + '% do crédito' : 'estimado';
   document.getElementById('exp-cet').textContent          = avgCet.toFixed(4) + '%';
   document.getElementById('exp-prazo').textContent        = avgPrazo;
   document.getElementById('exp-total-parcela').textContent = totalParcela >= 1e6 ? fmtM(totalParcela) : fmt(totalParcela);
